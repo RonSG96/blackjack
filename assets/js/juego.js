@@ -14,7 +14,9 @@ let puntosJugador = 0,
 
 //referencias del html
 const btnPedir = document.querySelector('#btnPedir');
+const divCartasJugador = document.querySelector('#jugador-cartas');
 var valorTotal = document.querySelectorAll('small');  //puede ser el All o el normal en caso sea el primero
+
 
 
 
@@ -83,6 +85,18 @@ btnPedir.addEventListener('click', () => {
 
     puntosJugador = puntosJugador + valorCarta (carta);
     valorTotal[0].innerText = puntosJugador; // evento de el puntaje en el small
-    console.log(puntosJugador);
 
+    //Creacion de la imangen de la carta de manera dinamica
+    const imgCarta = document.createElement ('img');
+    imgCarta.src = `assets/cartas/cartas/${ carta }.png`;
+    imgCarta.classList.add('carta'); //añadir la clase carta del css para que mantenga el estilo
+    divCartasJugador.append(imgCarta);
+
+    if (puntosJugador > 21){
+        console.warn('Lo siento mucho, perdiste');
+        btnPedir.disabled = true;
+    }else if (puntosJugador === 21 ){
+        console.warn('21, GENIAL!, Ganaste');
+        btnPedir.disabled = true;
+    }
 });
