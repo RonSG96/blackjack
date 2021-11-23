@@ -10,12 +10,16 @@ const tipos = ['C', 'D', 'H', 'S'];
 const especiales = ['A', 'J', 'Q', 'K'];
 
 let puntosJugador = 0,
-    puntosComputadora =0;
+    puntosComputadora = 0;
 
 //referencias del html
 const btnPedir = document.querySelector('#btnPedir');
+const btnDetener = document.querySelector('#btnDetener');
+
 const divCartasJugador = document.querySelector('#jugador-cartas');
-var valorTotal = document.querySelectorAll('small');  //puede ser el All o el normal en caso sea el primero
+const divCartasComputadora = document.querySelector('#computadora-cartas');
+
+var valorTotal = document.querySelectorAll('small'); //puede ser el All o el normal en caso sea el primero
 
 
 
@@ -31,14 +35,14 @@ const crearDeck = () => {
         }
     }
 
-    for ( let tipo of tipos){
-        for (let especial of especiales){
-            deck.push (especial + tipo);
+    for (let tipo of tipos) {
+        for (let especial of especiales) {
+            deck.push(especial + tipo);
         }
     }
 
     // console.log(deck);
-    deck = _.shuffle (deck);
+    deck = _.shuffle(deck);
     console.log(deck);
     return deck;
 
@@ -51,31 +55,56 @@ crearDeck();
 
 const pedirCarta = () => {
 
-    if (deck.length === 0){
+    if (deck.length === 0) {
         throw 'No hay carta en el deck';
     }
 
-        const carta = deck.pop();
-        return carta; 
+    const carta = deck.pop();
+    return carta;
 }
 
 
 const valorCarta = (carta) => {
 
     const valor = carta.substring(0, carta.length - 1);
-    return (isNaN (valor))?
-        ( valor === 'A' ) ?11 :10
-        : valor * 1;
+    return (isNaN(valor)) ?
+        (valor === 'A') ? 11 : 10 :
+        valor * 1;
 
     // let puntos = 0;
     // if( isNaN(valor) ){
     //     puntos = (valor === 'A') ? 11 : 10;
     // }else{
-        
+
     //     puntos = valor * 1;
     // }
     // console.log(puntos);
+
+    // turno de la computadora
 }
+
+    const turnoComputadora = (puntosMinimos) => {
+
+        do{
+        const carta = pedirCarta();
+
+        puntosComputadora = puntosComputadora + valorCarta(carta);
+        valorTotal[1].innerText = puntosComputadora;
+
+        
+        const imgCarta = document.createElement('img');
+        imgCarta.src = `assets/cartas/cartas/${ carta }.png`;
+        imgCarta.classList.add('carta'); //añadir la clase carta del css para que mantenga el estilo
+        divCartasComputadora.append(imgCarta);
+
+        if( puntosMinimos > 21){
+            break;
+        }
+
+        } while( (puntosComputadora < puntosMinimos) && (puntosMinimos <= 21) );
+    }
+
+
 
 // Eventos
 
@@ -83,20 +112,32 @@ btnPedir.addEventListener('click', () => {
 
     const carta = pedirCarta();
 
-    puntosJugador = puntosJugador + valorCarta (carta);
+    puntosJugador = puntosJugador + valorCarta(carta);
     valorTotal[0].innerText = puntosJugador; // evento de el puntaje en el small
 
     //Creacion de la imangen de la carta de manera dinamica
-    const imgCarta = document.createElement ('img');
+    const imgCarta = document.createElement('img');
     imgCarta.src = `assets/cartas/cartas/${ carta }.png`;
     imgCarta.classList.add('carta'); //añadir la clase carta del css para que mantenga el estilo
     divCartasJugador.append(imgCarta);
 
-    if (puntosJugador > 21){
+    if (puntosJugador > 21) {
         console.warn('Lo siento mucho, perdiste');
         btnPedir.disabled = true;
-    }else if (puntosJugador === 21 ){
+        turnoComputadora(puntosJugador);
+    } else if (puntosJugador === 21) {
         console.warn('21, GENIAL!, Ganaste');
         btnPedir.disabled = true;
     }
 });
+
+
+btnDetener.addEventListener('click', () => {
+    
+    btnPedir.disabled = true;
+    btnDetener.disabled = true;
+
+    turnoComputadora(puntosJugador);
+    });
+
+// TODO Borrar
