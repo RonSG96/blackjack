@@ -1,11 +1,12 @@
-/**
- * 2C = Two of CLubs (Treboles)
- * 2D = Two of Diamonds (Diamantes)
- * 2H = Two of Hearts (Corazones)
- * 2S = Two of Swords  (Espadas)
- */
 
-let deck = [];
+
+//sintaxys del patron modulo
+
+( () => {
+
+    'use strict'
+
+    let deck = [];
 const tipos = ['C', 'D', 'H', 'S'];
 const especiales = ['A', 'J', 'Q', 'K'];
 
@@ -44,7 +45,6 @@ const crearDeck = () => {
 
     // console.log(deck);
     deck = _.shuffle(deck);
-    console.log(deck);
     return deck;
 
 }
@@ -179,3 +179,15 @@ btnNuevo.addEventListener('click',()=>{
     btnDetener.disabled = false;
 });
 // TODO Borrar
+
+   
+})();
+
+
+
+
+
+
+
+/////////////
+
